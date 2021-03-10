@@ -1,0 +1,29 @@
+{
+  "name": "redflagsonline",
+  "version": "1.0.0",
+  "description": "Web app take on popular card game",
+  "main": "app.js",
+  "scripts": {
+    "start": "tsc && node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joely-w/RedFlagsOnline.git"
+  },
+  "author": "Joel Winterton",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joely-w/RedFlagsOnline/issues"
+  },
+  "homepage": "https://github.com/joely-w/RedFlagsOnline#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.11",
+    "typescript": "^4.2.3"
+  }
+}

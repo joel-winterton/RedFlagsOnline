@@ -1,3 +1,5 @@
+# PhpStorm config
+.idea
 # Logs
 logs
 *.log
