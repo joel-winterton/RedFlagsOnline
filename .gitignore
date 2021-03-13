@@ -104,3 +104,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Typescript support
+*.js
+*.js.map
