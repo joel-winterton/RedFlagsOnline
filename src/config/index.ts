@@ -8,5 +8,12 @@ export default {
     // Prefix to access API routes from web
     api: {
         prefix: '/api'
+    },
+    // Database connection details
+    database: {
+        hostname: process.env.DB_HOST,
+        name: process.env.DB_NAME,
+        username: process.env.DB_USERNAME,
+        password: process.env.DB_PASSWORD
     }
 }
