@@ -2,10 +2,12 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import config from '../config';
 import routes from '../api';
+import path from 'path';
+
 export default async ({app}: { app: express.Application }) => {
 
     // Static directories
-    app.use('/', express.static('/web'));
+    app.use(express.static(path.join(__dirname, '../web')));
 
     // Health check endpoints
     app.get('/status', (req, res) => {
