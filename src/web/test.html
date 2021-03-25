@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>jQuery UI Droppable - Simple photo manager</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <style>
+        body {
+            width: 100%;
+        }
+        ul {
+            list-style-type: none;
+        }
+        .portlet {
+            margin: 0 0 0.5em 0.5em;
+            padding: 0.3em;
+            width:200px;
+            height:280px;
+        }
+
+        .portlet-content {
+            padding: 0.4em;
+        }
+        .portlet-placeholder {
+            border: 1px dotted black;
+            margin: 0 1em 1em 0;
+            height: 200px;
+        }
+        .container{
+            width: 100%;
+        }
+        .white{
+            color:#eb1c2c;
+        }
+        .red{
+            color: white;
+            background-color: #eb1c2c;
+        }
+        .card{
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .board {width: 100%; min-height: 18em; padding: 1%;}
+        .hand{width: 100%; min-height: 18em; padding: 1%;}
+    </style>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $( function() {
+
+            // There's the hand and the board
+            var $hand = $( ".hand" ),$handWhite = $( "#handWhite" ),$handRed = $( "#handRed" ),
+                $board = $( ".board" ),$boardWhite = $( "#boardWhite" ),$boardRed = $( "#boardRed" );
+
+            // Let the hand items be draggable
+            $( "li", $hand ).draggable({
+                revert: "invalid", // when not dropped, the item will revert back to its initial position
+                containment: "document",
+                helper: "clone",
+                cursor: "move"
+            });
+
+
+            // Let the hand be droppable as well, accepting items from the board
+            $handWhite.droppable({
+                accept: "#boardWhite > li",
+                drop: function( event, ui ) {
+                    unplayCardWhite( ui.draggable );
+                }
+            });
+
+            $handRed.droppable({
+                accept: "#boardRed > li",
+                drop: function( event, ui ) {
+                    unplayCardRed( ui.draggable );
+                }
+            });
+            // Unplay card function
+            function unplayCardWhite( $item ) {
+                $item.fadeOut(function() {
+
+                    $item.appendTo( $handWhite ).fadeIn(function() {
+                        $item
+                            .animate({ width: "200px" })
+                            .animate({ height: "280px" });
+                    });
+                });
+            }
+            function unplayCardRed( $item ) {
+                $item.fadeOut(function() {
+
+                    $item.appendTo( $handRed ).fadeIn(function() {
+                        $item
+                            .animate({ width: "200px" })
+                            .animate({ height: "280px" });
+                    });
+                });
+            }
+        } );
+    </script>
+</head>
+<body>
+<div class="container-fluid ui-widget ui-helper-clearfix" >
+
+    <div class="card  flex-row my-5 card-body" id="Board"></div>
+
+    <div class="row flex-row my-5 " id="Hand">
+        <div class=" column " style="width:55.6%;  margin: 0 1em 0 1em;">
+            <div class="card card-body" >
+                <ul class="hand d-flex flex-row row" id='handWhite'></ul>
+            </div></div>
+        <div class="column" style="width:41.5%; ">
+            <div class="card card-body" >
+                <ul class="hand d-flex flex-row row " id='handRed'></ul>
+            </div></div>
+    </div>
+    <button type = "button" onclick="clearHand();"> Clear Hand</button>
+    <button type = "button" onclick="createPlayArea('White','420','boardWhite');">White zone</button>
+    <button type = "button" onclick="createPlayArea('Red','210','boardRed');"> Red zone</button>
+</div>
+
+<script>
+
+    class area {
+        constructor(colour,width,id){
+            this.colour= colour;
+            this.width = width;
+            this.id = id;
+        }
+
+        enableDrop(){
+            $( "#"+this.id ).droppable({
+                accept: "#hand"+this.colour+" > li",
+                classes: {
+                    "ui-droppable-active": "ui-state-highlight"
+                },
+                drop: function( event, ui ) {
+                    const ID = this.id;
+                    ui.draggable.fadeOut(function() {
+                        ui.draggable.appendTo( $( "#"+ID )).fadeIn(function() {
+                            ui.draggable
+                                .animate({ width: "175px" })
+                                .animate({ height: "245px" });
+                        });
+                    });
+                }
+            });
+        }
+
+
+        display(location){
+            var area = document.createElement("UL");
+            area.setAttribute("class", "board d-flex flex-row row ");
+            area.setAttribute("style", "width:"+this.width+"px");
+            area.setAttribute("id", this.id);
+            document.getElementById(location).appendChild(area);
+        }
+    }
+
+
+    class Card{
+        constructor(type,id,text){
+            this.type= type;
+            this.id = id;
+            this.text = text;
+        }
+
+        display(location){
+            var newCard = document.createElement("LI");
+            newCard.setAttribute("class", "card portlet ui-widget-content ui-corner-tr ui-draggable ui-draggable-handle "+this.type);
+            newCard.setAttribute("id",this.id);
+            var content = document.createElement("DIV");
+            var textnode = document.createTextNode(this.text);
+            content.appendChild(textnode);
+            content.setAttribute("class", "portlet-content");
+            newCard.appendChild(content);
+            document.getElementById(location).appendChild(newCard);
+        }
+
+    }
+
+    function clearHand(){
+        var handWhite = document.getElementById("handWhite");
+        var handRed = document.getElementById("handRed");
+        $(handWhite).empty();
+        $(handRed).empty();
+    }
+
+    function newHand(cards){
+        for (i = 0; i < cards.length; i++) {
+            if (cards[i].card_type =='red'){
+                var hand = "handRed"
+            }
+            else{
+                var hand = "handWhite"
+            }
+            whiteCard = new Card(cards[i].card_type,cards[i].card_id,cards[i].card_text).display(hand);
+        }
+    }
+
+    var sentCards = [{card_type:"red", card_id:7, card_text:"RFlag 1"},{card_type:"red", card_id:8, card_text:"RFlag 2"},{card_type:"red", card_id:9, card_text:"RFlag 3"},{card_type:"white", card_id:10, card_text:"WFlag 1"},
+        {card_type:"white", card_id:11, card_text:"WFlag 2"},{card_type:"white", card_id:12, card_text:"WFlag 3"},{card_type:"white", card_id:13, card_text:"WFlag 4"}];
+    newHand(sentCards);
+</script>
+</body>
+</html>
