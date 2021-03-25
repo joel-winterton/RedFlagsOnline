@@ -1,8 +1,6 @@
 import {Request, Response, Router} from 'express';
 
 const route = Router();
-export default (app: Router) => {
+export default (app: Router):void=> {
     app.use('/', route);
-    route.post('/game/create', (req: Request, res: Response) => {
-    })
 }
