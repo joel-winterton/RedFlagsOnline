@@ -9,15 +9,19 @@ class Game {
         // Handle errors
         socket.on('error', (error) => {
             this.reportError(error);
-        })
+        });
 
         // Handle join events
         socket.on('joined', (data) => {
-            console.log(`Joined "${data.name}"`);
             this.gameId = data.gameId;
-            this.game_name = data.name;
+            this.gameName = data.name;
+            this.loadGame();
+        });
 
-        })
+        // Handle player list update
+        socket.on('players', (players) => {
+            this.displayPlayers(players);
+        });
     }
 
     /**
@@ -29,6 +33,20 @@ class Game {
         $("#error").text(error);
     }
 
+    /**
+     * Render list of players
+     * @param {Array} players Array of players
+     * @param {string} players.username Username of player
+     * @param {number} players.score Players score
+     */
+    displayPlayers(players) {
+        // Loop through appending player row to content
+        let players_content = "";
+        for (let i = 0; i < players.length; i += 1) {
+            players_content += `<tr><td>${players[i].username}</td><td>${players[i].score}</td></tr>`
+        }
+        $("#info_players").html(players_content)
+    }
 
     /**
      * Create and join a game
@@ -56,6 +74,17 @@ class Game {
     joinGame(username, game_id) {
         socket.emit('join', {username, game_id});
     }
+
+    /**
+     * Initialise game in DOM
+     */
+    loadGame() {
+        $("#start").removeClass('active').addClass('inactive');
+        $("#main").removeClass('inactive').addClass('active');
+        $("#info_id").text(this.gameId);
+        $("#info_name").text(this.gameName);
+    }
+
 }
 
 const game = new Game();
@@ -64,6 +93,6 @@ $(document).ready(() => {
         game.createGame($("#username").val(), $("#game_name").val());
     });
     $("#join").on('click', () => {
-        game.joinGame($("#join_username").val(), $("#join_id"));
+        game.joinGame($("#join_username").val(), $("#join_id").val());
     })
 })
