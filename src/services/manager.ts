@@ -24,9 +24,9 @@ export default class GameManager {
      * Add a new game object to the list of games
      * @returns {string} The ID of the game
      */
-    public generateGame(): string {
+    public generateGame(name:string): string {
         const id = this.generateID();
-        this.games[id] = new Game(id);
+        this.games[id] = new Game(id, name);
         return id;
     }
 }

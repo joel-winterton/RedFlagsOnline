@@ -8,26 +8,30 @@ interface SocketIO extends Socket {
 
 const manager = new GameManager();
 export default async (socket: SocketIO): Promise<void> => {
-    socket.on('create', (username) => {
-        const gameId = manager.generateGame();
-        if (manager.games[gameId].joinGame(username)) {
-            socket.gameId = gameId;
-        }
+
+    socket.on('create', (game_name) => {
+        // Create game
+        const gameId = manager.generateGame(game_name);
+        socket.emit('created', gameId);
     })
-    socket.on('join', (username, gameId) => {
+
+    socket.on('join', (data) => {
         try {
 
             // Add player to game object
-            const game = manager.games[gameId];
-            game.joinGame(username);
-            socket.gameId = gameId;
+            const game = manager.games[data.gameId];
+            game.joinGame(data.username);
+            socket.gameId = data.gameId;
 
             // Add player to game socket
-            socket.join(gameId);
+            socket.join(data.gameId);
+            // Tell user they've joined
+            socket.emit('joined', {name: manager.games[data.gameId].name, gameId: data.gameId})
             // Send all players an updated list of players
-            socket.to(gameId).emit("Players", game.listPlayers());
+            socket.to(data.gameId).emit("players", game.listPlayers());
         } catch (e) {
-            console.log('Game not found!');
+            // If not game exists, send error
+            socket.emit('error', 'Game not found!');
         }
-    })
+    });
 }

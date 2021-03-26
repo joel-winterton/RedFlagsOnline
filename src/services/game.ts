@@ -16,11 +16,14 @@ interface Players {
 export default class Game {
     private id: string;
     private readonly players: Players[];
+    public readonly name: string;
     // Fix object declaration
     private cards: {username:Card};
-    constructor(id: string) {
+
+    constructor(id: string, name: string) {
         this.id = id;
         this.players = [];
+        this.name = name;
     }
 
     /**
