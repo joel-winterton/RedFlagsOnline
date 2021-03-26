@@ -11,8 +11,20 @@ interface SocketIO extends Socket {
 
 export default async ({http}: { http: http.Server }): Promise<void> => {
     const io = new Server(http);
+    let connections = 0;
     io.on('connection', async (socket: SocketIO) => {
-        console.log('Socket connected!')
-        await SocketRoutes(socket);
+        // Load socket routes
+        await SocketRoutes(socket, io);
+
+        // Handle socket logging **Optional**
+        socket.on('disconnect', () => {
+            connections -= 1;
+            console.clear();
+            console.log(`Currently connected ${connections}`);
+
+        })
+        connections += 1;
+        console.clear();
+        console.log(`Currently connected ${connections}`);
     });
 }
