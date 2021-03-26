@@ -108,3 +108,4 @@ dist
 # Typescript support
 *.js
 *.js.map
+!/src/web/*.js
