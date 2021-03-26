@@ -22,3 +22,6 @@ EXPRESS_SECRET=randomString
 EXPRESS_PORT = 5000
 ```
 You'll need to install the project dependencies using `npm install`. You can then run the project using `node run start` which will compile the typescript and run the result.
+
+## Recompiling documentation
+At the moment, rendering JSDOC into Markdown (using `npm run docs`) doesn't compile, which is sad 😞
