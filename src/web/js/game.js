@@ -22,6 +22,29 @@ class Game {
         socket.on('players', (players) => {
             this.displayPlayers(players);
         });
+
+        // Handle cards being dealt
+        socket.on('deal', (data) => {
+            if (data.single) {
+                $("#info_cards").text(`You're the single person for this round!`)
+            } else {
+                for (let i = 0; i < data.white_cards.length; i += 1) {
+                    $("#info_cards").append(`<strong>White card</strong> ${data.white_cards[i].content}<br>`)
+                }
+                for (let j = 0; j < data.red_cards.length; j += 1) {
+                    $("#info_cards").append(`<strong>Red card</strong> ${data.red_cards[j].content}<br>`);
+                }
+
+            }
+        })
+
+    }
+
+    /**
+     * Request game be started
+     */
+    startGame() {
+        socket.emit('start');
     }
 
     /**
@@ -94,5 +117,8 @@ $(document).ready(() => {
     });
     $("#join").on('click', () => {
         game.joinGame($("#join_username").val(), $("#join_id").val());
+    });
+    $("#process_start").on('click', () => {
+        game.startGame();
     })
 })
