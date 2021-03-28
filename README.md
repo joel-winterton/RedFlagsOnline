@@ -31,6 +31,8 @@ The database currently only has one table `cards`:
 | *type*   | int      | 0 - Red Flag 1 - Perks |
 | *id*      | int      | Unique card ID         |
 | *content* | varchar(512)    | Card content           |
+
+
 To populate this table with cards (which can be found in `src/models/cards.json`), run `npm run populate`
 
 ## Recompiling documentation
