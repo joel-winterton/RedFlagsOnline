@@ -73,7 +73,7 @@ export default class Game extends Database {
         }
     }
 
-    async startGame(dealCallback: (socketId: string, cards: { red_card: Record<string, never>; white_card: Record<string, never> } | { single: boolean }) => never): Promise<void> {
+    async startGame(dealCallback: (socketId, message) => void): Promise<void> {
         // Set initial single player
         this.singlePlayer = this.players[0];
         // Assign cards to users
