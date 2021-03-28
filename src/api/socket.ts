@@ -20,7 +20,7 @@ export default async (socket: SocketIO, io: Server): Promise<void> => {
         try {
             // Add player to game object
             const game = manager.games[data.game_id];
-            game.joinGame(data.username);
+            game.joinGame(data.username, socket.id);
             socket.gameId = data.game_id;
 
             // Add player to game socket
@@ -37,4 +37,12 @@ export default async (socket: SocketIO, io: Server): Promise<void> => {
             socket.emit('error', "Game doesn't exist");
         }
     });
+
+    socket.on('start', async () => {
+        const game = manager.games[socket.gameId];
+        await game.startGame((socketId, message) => {
+            io.to(socketId).emit('deal', message);
+        });
+    })
+
 }
