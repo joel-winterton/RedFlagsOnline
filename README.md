@@ -23,5 +23,15 @@ EXPRESS_PORT = 5000
 ```
 You'll need to install the project dependencies using `npm install`. You can then run the project using `node run start` which will compile the typescript and run the result.
 
+## Database
+The database currently only has one table `cards`:
+
+| Field   | Datatype | Description            |
+|---------|----------|------------------------|
+| *type*   | int      | 0 - Red Flag 1 - Perks |
+| *id*      | int      | Unique card ID         |
+| *content* | varchar(512)    | Card content           |
+To populate this table with cards (which can be found in `src/models/cards.json`), run `npm run populate`
+
 ## Recompiling documentation
 At the moment, rendering JSDOC into Markdown (using `npm run docs`) doesn't compile, which is sad 😞
