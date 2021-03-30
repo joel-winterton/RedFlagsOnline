@@ -1,12 +1,35 @@
 body
   margin: 0
   overflow-x: hidden
+  text-align: center
+
+label
+  display: block
+
+  input
+    display: block
+    min-width: 200px
+    max-width: 500px
+    margin: 0 auto
+
 #game
-  div
+  form
+    margin-bottom: 30px
+  .players
+    list-style-type: none
+  .slide
     transition: 1.5s
     width: 100%
     position: absolute
+
+  .input-group
+    text-align: center
+    label
+      display: block
+
   .inactive
     left: -100vw
+
   .active
     left: 0
+
