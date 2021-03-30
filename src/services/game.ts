@@ -54,8 +54,8 @@ export default class Game extends Database {
         const players = this.players.length - 1;
 
         // Fetch white and red cards
-        let red_cards = await this.fetchRedCards(players);
-        let white_cards = await this.fetchWhiteCards(players);
+        const red_cards = await this.fetchRedCards(players);
+        const white_cards = await this.fetchWhiteCards(players);
         // Loop through players and deal cards to none single players
         for (let i = 0; i < this.players.length; i += 1) {
             if (this.players[i].username !== this.singlePlayer.username) {
@@ -67,8 +67,8 @@ export default class Game extends Database {
                 };
 
                 // Remove assigned cards from cards that can be dealt
-                white_cards = white_cards.splice(0, 4);
-                red_cards = red_cards.splice(0, 3);
+                white_cards.splice(0, 4);
+                red_cards.splice(0, 3);
             }
         }
     }
