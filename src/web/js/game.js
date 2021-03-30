@@ -1,11 +1,12 @@
+/**
+ * @todo Fix white card selection logic (maximum of two cards can be selected)
+ */
 const socket = io();
 
 
 class Game {
-    /**
-     * @constructor
-     */
     constructor() {
+        this.selected_white = [];
         // Handle errors
         socket.on('error', (error) => {
             this.reportError(error);
@@ -25,19 +26,24 @@ class Game {
 
         // Handle cards being dealt
         socket.on('deal', (data) => {
+            // Remove start button
+            $("#process_start").remove();
             // If player is the single no cards are dealt to them
             if (data.single) {
-                $("#info_cards").text(`You're the single person for this round!`)
+                $("#info_prompt").text(`You're the single person for this round!`)
             } else {
+                $("#info_prompt").text(`Select two `)
                 this.white_cards = data.white_cards;
                 this.red_cards = data.red_cards;
                 for (let i = 0; i < data.white_cards.length; i += 1) {
-                    $("#info_cards").append(`<strong>White card</strong> ${data.white_cards[i].content}<br>`)
+                    $("#info_white_cards").append(`<div class="col-md-3 white card" data-id="${data.white_cards[i].id}"><span>${data.white_cards[i].content}</span></div>`);
                 }
                 for (let j = 0; j < data.red_cards.length; j += 1) {
-                    $("#info_cards").append(`<strong>Red card</strong> ${data.red_cards[j].content}<br>`);
+                    $("#info_red_cards").append(`<div class="col-md-4 red card" data-id="${data.red_cards[j].id}"><span>${data.red_cards[j].content}</span></div>`);
                 }
             }
+            // Show the send card button
+            $("#process_send").show();
         })
 
     }
@@ -102,6 +108,9 @@ class Game {
      * @param {string} game_id ID of game to join
      */
     joinGame(username, game_id) {
+        // Set username
+        this.username = username;
+        // Emit join request
         socket.emit('join', {username, game_id});
     }
 
@@ -132,6 +141,20 @@ class Game {
         }, 3000);
     }
 
+    selectCard(type, id) {
+        if (type === 'red') {
+            this.selected_red = id;
+        } else if (type === 'white') {
+            this.selected_white.push(id);
+        }
+
+    }
+
+    removeCard(id) {
+        const index = this.selected_white.indexOf(id);
+        this.selected_white.splice(index, 1);
+    }
+
 }
 
 const game = new Game();
@@ -144,9 +167,32 @@ $(document).ready(() => {
     });
     $("#process_start").on('click', () => {
         game.startGame();
-    })
+    });
     $("#process_copy").on('click', () => {
         game.copyGameID();
-    })
+    });
 
-})
+    $(document).on('click', '.white', function () {
+        const card = $(this);
+        // If user is deselecting, remove card
+        if (card.hasClass('selected')) {
+            card.removeClass('selected');
+            game.removeCard(card.data('id'));
+        }
+
+        // If there is space to select another card
+        if (game.selected_white.length < 2) {
+            card.toggleClass('selected');
+            game.selectCard('white', card.data('id'));
+        }
+    });
+    $(document).on('click', '.red', function () {
+        const card = $(this);
+        // Remove all other selected elements
+        $(`.red[data-id!=${card.data('id')}]`).removeClass('selected');
+        // Select red card
+        card.addClass('selected');
+        // Add red card to game object
+        game.selectCard('red', card.data('id'));
+    });
+});
