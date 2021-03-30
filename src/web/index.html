@@ -16,7 +16,7 @@
     <!-- Custom stylesheet -->
     <link href="css/main.css" rel="stylesheet">
 
-    <title>Host a game</title>
+    <title>Red Flags - Online Card Game</title>
 </head>
 <body>
 <div id="game" class="container">
@@ -61,12 +61,24 @@
                     </ul>
                 </div>
             </div>
+            <div class="info_prompt">
+
+            </div>
             <div class="row">
-                <div class="col-md-8 offset-md-1"></div>
-                <div id="info_cards"></div>
+                <div class="card_container col-md-6">
+                    <div class="row" id="info_red_cards">
+                        <!-- Append red cards -->
+                    </div>
+                </div>
+                <div class="card_container col-md-6">
+                    <div class="row" id="info_white_cards">
+                        <!-- Append white cards -->
+                    </div>
+                </div>
             </div>
         </div>
         <button type="button" class="btn btn-primary" id="process_start">Start game</button>
+        <button type="button" class="btn btn-success" id="process_send">Submit cards</button>
     </div>
 </div>
 </body>
