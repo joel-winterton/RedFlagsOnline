@@ -2,10 +2,72 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-    <title>Hello</title>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Socket script -->
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- Main game script -->
+    <script src="js/game.js"></script>
+    <!-- Custom stylesheet -->
+    <link href="css/main.css" rel="stylesheet">
+
+    <title>Host a game</title>
 </head>
 <body>
-
+<div id="game" class="container">
+    <div id="error">
+        <!-- Field to append errors to -->
+    </div>
+    <!-- Game starting section -->
+    <div id="start" class="slide active">
+        <h2>Create a game</h2>
+        <form>
+            <label>Username: <input class="form-control" type="text" id="username"></label>
+            <label>Game name:<input class="form-control" type="text" id="game_name"/>
+            </label>
+            <button type="button" class="btn btn-primary" id="process_create">Create game</button>
+        </form>
+        <h2>Join a game</h2>
+        <form>
+            <label>Username<input class="form-control" type="text" id="join_username"></label>
+            <label>Game ID:<input class="form-control" type="text" id="join_id"/>
+            </label>
+            <button type="button" class="btn btn-primary" id="process_join">Join game</button>
+        </form>
+    </div>
+    <!-- Active game section -->
+    <div id="main" class="slide inactive">
+        <h1 id="info_name"></h1>
+        <div class="info">
+            <div class="row">
+                <div class="col-md-4 offset-md-4 col-sm-8 offset-sm-2">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Game ID"
+                               id="info_id">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="process_copy">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <ul class="players" id="info_players">
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-8 offset-md-1"></div>
+                <div id="info_cards"></div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary" id="process_start">Start game</button>
+    </div>
+</div>
 </body>
 </html>
