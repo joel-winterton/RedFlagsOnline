@@ -25,16 +25,18 @@ class Game {
 
         // Handle cards being dealt
         socket.on('deal', (data) => {
+            // If player is the single no cards are dealt to them
             if (data.single) {
                 $("#info_cards").text(`You're the single person for this round!`)
             } else {
+                this.white_cards = data.white_cards;
+                this.red_cards = data.red_cards;
                 for (let i = 0; i < data.white_cards.length; i += 1) {
                     $("#info_cards").append(`<strong>White card</strong> ${data.white_cards[i].content}<br>`)
                 }
                 for (let j = 0; j < data.red_cards.length; j += 1) {
                     $("#info_cards").append(`<strong>Red card</strong> ${data.red_cards[j].content}<br>`);
                 }
-
             }
         })
 
@@ -50,10 +52,15 @@ class Game {
     /**
      * Report error to DOM
      * @param {string} error - Error text to add to DOM
-     * @des
+     *
      */
     reportError(error) {
-        $("#error").text(error);
+        $("#error").append(`<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Error: </strong> ${error}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>`);
     }
 
     /**
@@ -66,9 +73,9 @@ class Game {
         // Loop through appending player row to content
         let players_content = "";
         for (let i = 0; i < players.length; i += 1) {
-            players_content += `<tr><td>${players[i].username}</td><td>${players[i].score}</td></tr>`
+            players_content += `<li><strong>${players[i].username}</strong> (${players[i].score} points)</li>`;
         }
-        $("#info_players").html(players_content)
+        $("#info_players").html(players_content);
     }
 
     /**
@@ -104,21 +111,42 @@ class Game {
     loadGame() {
         $("#start").removeClass('active').addClass('inactive');
         $("#main").removeClass('inactive').addClass('active');
-        $("#info_id").text(this.gameId);
+        $("#info_id").val(this.gameId);
         $("#info_name").text(this.gameName);
+    }
+
+    /**
+     * Copy game ID to the clipboard
+     */
+    copyGameID() {
+        const text = $("#info_id");
+        const button = $("#process_copy")
+        // Select text field
+        text[0].select();
+        text[0].setSelectionRange(0, 99999); // For mobile devices
+        // Copy text
+        document.execCommand('copy');
+        button.html('Copied');
+        setTimeout(() => {
+            button.html('Copy');
+        }, 3000);
     }
 
 }
 
 const game = new Game();
 $(document).ready(() => {
-    $("#create").on('click', () => {
+    $("#process_create").on('click', () => {
         game.createGame($("#username").val(), $("#game_name").val());
     });
-    $("#join").on('click', () => {
+    $("#process_join").on('click', () => {
         game.joinGame($("#join_username").val(), $("#join_id").val());
     });
     $("#process_start").on('click', () => {
         game.startGame();
     })
+    $("#process_copy").on('click', () => {
+        game.copyGameID();
+    })
+
 })
