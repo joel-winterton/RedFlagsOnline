@@ -49,6 +49,10 @@ export default class Game extends Database {
         return this.players;
     }
 
+    /**
+     * Deal cards to users
+     */
+
     async dealCards() {
         // Since "Single" player doesn't get any cards
         const players = this.players.length - 1;
